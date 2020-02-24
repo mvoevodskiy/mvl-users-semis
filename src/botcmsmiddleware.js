@@ -27,19 +27,26 @@ class BotCMSMiddleware {
         return next => async ctx => {
             let localUser;
             let requestUserId = target.MT.empty(ctx.singleSession.botcmsUser) ? 0 : ctx.singleSession.botcmsUser.id;
-            if (requestUserId === 0) {
-                let selfUserInfo = await ctx.Bridge.fetchUserInfo();
-                requestUserId = selfUserInfo.id;
-            }
-            localUser = await this.Model.findByPk(requestUserId);
-            if (!target.MT.empty(localUser)) {
-                ctx.singleSession.mvlUser = localUser;
-                // console.log('USER ID: ', localUser.id);
-                let profile = await this.DB.models.mvlUserProfile.findOne({where: {userId: requestUserId}});
-                if (profile !== null) {
-                    ctx.singleSession.mvlUserProfile = profile;
-                    // console.log('PROFILE SUCCESS');
+            if (requestUserId !== 0) {
+                localUser = await this.Model.findByPk(requestUserId);
+                if (!target.MT.empty(localUser)) {
+                    ctx.singleSession.mvlUser = localUser;
+                    // console.log('USER ID: ', localUser.id);
+                    let profile = await this.DB.models.mvlUserProfile.findOne({where: {userId: requestUserId}});
+                    if (profile !== null) {
+                        ctx.singleSession.mvlUserProfile = profile;
+                        // console.log('PROFILE SUCCESS');
+                    }
                 }
+            } else {
+                ctx.singleSession.mvlUser = this.Model.build({
+                    id: 0,
+                    username: '(unknown)'
+                });
+                ctx.singleSession.mvlUserProfile = this.DB.models.mvlUserProfile.build({
+                    id: 0,
+                    userId: 0,
+                })
             }
             return next(ctx);
         }
