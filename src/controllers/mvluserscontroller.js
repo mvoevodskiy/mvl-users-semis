@@ -18,7 +18,7 @@ class MVLUsersController extends MVLoaderBase {
     async initFinish() {
         super.initFinish();
         this.DB = this.App.services.DB;
-        console.log('MVL USERS CONTROLLER INIT FINISHED.');
+        // console.log('MVL USERS CONTROLLER INIT FINISHED.');
     }
 
     async register(data) {
