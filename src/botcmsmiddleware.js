@@ -25,29 +25,30 @@ class BotCMSMiddleware {
 
     handleUpdate = (target) => {
         return next => async ctx => {
-            let localUser;
-            let requestUserId = target.MT.empty(ctx.singleSession.botcmsUser) ? 0 : ctx.singleSession.botcmsUser.id;
-            if (requestUserId !== 0) {
-                localUser = await this.Model.findByPk(requestUserId);
-                if (!target.MT.empty(localUser)) {
-                    ctx.singleSession.mvlUser = localUser;
-                    // console.log('USER ID: ', localUser.id);
-                    let profile = await this.DB.models.mvlUserProfile.findOne({where: {userId: requestUserId}});
-                    if (profile !== null) {
-                        ctx.singleSession.mvlUserProfile = profile;
-                        // console.log('PROFILE SUCCESS');
-                    }
-                }
+            let user;
+            let botcmsUser = ctx.singleSession.botcmsUser;
+            let finder = {
+                where: {},
+                include: ['Profile']
+            };
+
+            if (!target.MT.empty(botcmsUser)) {
+                user = await botcmsUser.getMvlUser(finder);
             } else {
-                ctx.singleSession.mvlUser = this.Model.build({
-                    id: 0,
-                    username: '(unknown)'
-                });
-                ctx.singleSession.mvlUserProfile = this.DB.models.mvlUserProfile.build({
-                    id: 0,
-                    userId: 0,
-                })
+                finder.where.botUserId = ctx.Message.sender.id;
+                user = await this.Model.findOne(finder);
             }
+
+            if (target.MT.empty(user)) {
+                user = this.Model.build({
+                        id: -1,
+                        username: '(anonymous)',
+                        Profile: {firstName: '(anonymous)'}
+                    },
+                    finder
+                );
+            }
+            ctx.singleSession.mvlUser = user;
             return next(ctx);
         }
     };
