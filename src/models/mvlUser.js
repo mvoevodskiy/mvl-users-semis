@@ -25,7 +25,31 @@ module.exports = (Sequelize) => {
                 type: Sequelize.TEXT,
             },
         },
-        {}
+        {},
+        {
+            'belongsToMany': [
+                {
+                    model: 'mvlUserGroup',
+                    through: {
+                        model: 'mvlUserGroupMember'
+                    }
+
+                },
+                {
+                    model: 'BotCMSUser',
+                    through: {
+                        model: 'mvlUserBotCMSUserLink'
+                    }
+
+                }
+            ],
+            'hasOne': [
+                {
+                    name: 'mvlUserProfile',
+                    alias: 'Profile',
+                }
+            ],
+        }
     ];
 
 };

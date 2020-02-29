@@ -1,13 +1,6 @@
 module.exports = (Sequelize) => {
     return [
         {
-            userId: {
-                type: Sequelize.INTEGER,
-                // references: {
-                //     model: 'mvlUsers',
-                //     key: 'id',
-                // }
-            },
             firstName: {
                 type: Sequelize.STRING,
                 default: '',
@@ -18,6 +11,10 @@ module.exports = (Sequelize) => {
             },
             lastName: {
                 type: Sequelize.STRING,
+                default: '',
+            },
+            gender: {
+                type: Sequelize.STRING(10),
                 default: '',
             },
             email: {
@@ -65,6 +62,13 @@ module.exports = (Sequelize) => {
                     return [this.firstName, this.secondName, this.lastName].join(' ').replace('  ', ' ').trim();
                 }
             }
+        },
+        {
+            'belongsTo': [
+                {
+                    model: 'mvlUser',
+                    as: 'User',
+                }],
         }
     ];
 };

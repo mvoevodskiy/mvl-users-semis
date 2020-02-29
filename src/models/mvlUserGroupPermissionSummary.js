@@ -1,24 +1,28 @@
 module.exports = (Sequelize) => {
-    return {
-        groupId: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: 'mvlUserGroups',
-                key: 'id',
+    return [
+        {
+            permissions: {
+                type: Sequelize.TEXT,
+                default: '{}',
+                get() {
+                    let perm = this.getDataValue('permissions');
+                    try {
+                        perm = JSON.parse(perm);
+                    } catch (e) {
+                        perm = {};
+                    }
+                    return perm;
+                }
             }
         },
-        permissions: {
-            type: Sequelize.TEXT,
-            default: '{}',
-            get() {
-                let perm = this.getDataValue('permissions');
-                try {
-                    perm = JSON.parse(perm);
-                } catch (e) {
-                    perm = {};
-                }
-                return perm;
-            }
+        {},
+        {
+            'belongsTo': [
+                {
+                    model: 'mvlUserGroup',
+                    as: 'Group',
+                },
+            ]
         }
-    };
+    ];
 };
