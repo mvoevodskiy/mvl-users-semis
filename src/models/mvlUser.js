@@ -3,8 +3,17 @@ module.exports = (Sequelize) => {
         {
             username: {
                 type: Sequelize.STRING,
-                default: 0,
+                defaultValue: '',
                 allowNull: false,
+                unique: true,
+                set(val) {
+                    console.log('mvlUser USERNAME VAL <', val, '> TYPE ', typeof val);
+                    if (val === '' || typeof val !== 'string') {
+                        val = this.getDataValue('username') !== '' ? this.getDataValue('username') : 'user_' + Date.now();
+                    }
+                    console.log('mvlUser USERNAME VAL <', val, '> TYPE ', typeof val);
+                    this.setDataValue('username', val);
+                }
             },
             botUserId: {
                 type: Sequelize.INTEGER,
@@ -25,28 +34,36 @@ module.exports = (Sequelize) => {
                 type: Sequelize.TEXT,
             },
         },
-        {},
+        {
+            hooks: {
+                beforeCreate: (user, options) => {
+                    if (user.username === '') {
+                        user.username = '';
+                    }
+                },
+            },
+        },
         {
             'belongsToMany': [
                 {
                     model: 'mvlUserGroup',
+                    as: 'Groups',
                     through: {
                         model: 'mvlUserGroupMember'
                     }
 
                 },
+            ],
+            'hasMany': [
                 {
                     model: 'BotCMSUser',
-                    through: {
-                        model: 'mvlUserBotCMSUserLink'
-                    }
-
-                }
+                },
             ],
             'hasOne': [
                 {
-                    name: 'mvlUserProfile',
-                    alias: 'Profile',
+                    model: 'mvlUserProfile',
+                    as: 'Profile',
+                    foreignKey: 'UserId',
                 }
             ],
         }
