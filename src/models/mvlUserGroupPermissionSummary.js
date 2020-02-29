@@ -3,7 +3,7 @@ module.exports = (Sequelize) => {
         {
             permissions: {
                 type: Sequelize.TEXT,
-                default: '{}',
+                defaultValue: '{}',
                 get() {
                     let perm = this.getDataValue('permissions');
                     try {

@@ -3,11 +3,11 @@ module.exports = (Sequelize) => {
         {
             name: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             description: {
                 type: Sequelize.TEXT,
-                default: '',
+                defaultValue: '',
             },
         },
         {},

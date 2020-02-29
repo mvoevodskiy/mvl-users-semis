@@ -3,14 +3,14 @@ module.exports = (Sequelize) => {
         {
             name: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
                 unique: {
                     msg: 'Permission with same name already exists',
                 }
             },
             description: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             }
         },
         {},

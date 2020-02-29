@@ -3,23 +3,23 @@ module.exports = (Sequelize) => {
         {
             firstName: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             secondName: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             lastName: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             gender: {
                 type: Sequelize.STRING(10),
-                default: '',
+                defaultValue: '',
             },
             email: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
                 validate:{
                     // notEmpty:{
                     //     args:true,
@@ -33,27 +33,27 @@ module.exports = (Sequelize) => {
             },
             phone: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             mobilePhone: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             country: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             city: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             address: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             photo: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
         },
         {

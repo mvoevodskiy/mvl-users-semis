@@ -17,15 +17,15 @@ module.exports = (Sequelize) => {
             },
             botUserId: {
                 type: Sequelize.INTEGER,
-                default: 0,
+                defaultValue: 0,
             },
             password: {
                 type: Sequelize.STRING,
-                default: '',
+                defaultValue: '',
             },
             salt: {
                 type: Sequelize.STRING(64),
-                default: '',
+                defaultValue: '',
             },
             remoteKey: {
                 type: Sequelize.STRING,
