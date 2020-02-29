@@ -13,6 +13,10 @@ module.exports = (Sequelize) => {
                 type: Sequelize.STRING,
                 defaultValue: '',
             },
+            dob: {
+                type: Sequelize.BIGINT,
+                defaultValue: 0,
+            },
             gender: {
                 type: Sequelize.STRING(10),
                 defaultValue: '',
