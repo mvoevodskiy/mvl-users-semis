@@ -23,16 +23,12 @@ module.exports = (Sequelize) => {
             },
             email: {
                 type: Sequelize.STRING,
-                defaultValue: '',
                 validate:{
                     // notEmpty:{
                     //     args:true,
                     //     msg:"Email-id required"
                     // },
-                    isEmail:{
-                        args: true,
-                        msg: 'Valid email-id required'
-                    }
+                    isEmail: true,
                 },
             },
             phone: {
