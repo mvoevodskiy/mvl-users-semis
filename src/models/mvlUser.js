@@ -7,11 +7,9 @@ module.exports = (Sequelize) => {
                 allowNull: false,
                 unique: true,
                 set(val) {
-                    console.log('mvlUser USERNAME VAL <', val, '> TYPE ', typeof val);
                     if (val === '' || typeof val !== 'string') {
                         val = this.getDataValue('username') !== '' ? this.getDataValue('username') : 'user_' + Date.now();
                     }
-                    console.log('mvlUser USERNAME VAL <', val, '> TYPE ', typeof val);
                     this.setDataValue('username', val);
                 }
             },
