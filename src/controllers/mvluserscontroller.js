@@ -2,6 +2,8 @@ const MVLoaderBase = require('mvloader/src/mvloaderbase');
 
 class MVLUsersController extends MVLoaderBase {
 
+    caption = 'mvlUsers';
+
     constructor (App, ...config) {
         let localDefaults = {
 
@@ -34,6 +36,14 @@ class MVLUsersController extends MVLoaderBase {
         }
         return user;
     }
+
+    isRegistered_trg = async (ctx) => {
+        return ctx.singleSession.mvlUser.id !== -1;
+    };
+
+    notRegistered_trg = async (ctx) => {
+        return !(await this.isRegistered_trg(ctx));
+    };
 
 }
 
