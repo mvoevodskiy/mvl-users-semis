@@ -23,7 +23,7 @@ class MvlUsersSemis extends MVLoaderBase{
                     DBHandler: {
                         sequelize: {},
                         models: {
-                            mvlUserBotCMSUserLink: require('./models/mvlUserBotCMSUserLink'),
+                            mvlUser: require('./models/mvlUser'),
                             mvlUserGroup: require('./models/mvlUserGroup'),
                             mvlUserGroupMember: require('./models/mvlUserGroupMember'),
                             mvlUserGroupPermissionSummary: require('./models/mvlUserGroupPermissionSummary'),
