@@ -54,7 +54,7 @@ module.exports = (Sequelize) => {
             ],
             'hasMany': [
                 {
-                    model: 'BotCMSUser',
+                    model: 'mvlBotCMSUser',
                 },
             ],
             'hasOne': [
