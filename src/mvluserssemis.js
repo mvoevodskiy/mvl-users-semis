@@ -1,4 +1,4 @@
-const MVLoaderBase = require('mvloader/src/mvloaderbase');
+const {MVLoaderBase} = require('mvloader');
 
 class MvlUsersSemis extends MVLoaderBase{
     static exportConfig = {
