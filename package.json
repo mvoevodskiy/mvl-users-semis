@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "mvloader": "^1.0.0",
-    "mvtools": "^1.0.0"
+    "mvloader": "^1.0.3",
+    "mvtools": "^1.0.7"
   },
   "devDependencies": {},
   "author": "mvoevodskiy",
