@@ -25,16 +25,24 @@ class MVLUsersController extends MVLoaderBase {
 
     async register(data) {
         let profile;
-        let user = await this.DB.models.mvlUser.create(data);
-        if (user !== null) {
-            data.userId = user.id;
-            profile = await this.DB.models.mvlUserProfile.create(data);
+        if (typeof data.Profile !== 'object') {
+            data.Profile = data;
         }
-        if (profile === null) {
-            user.remove();
-            return false;
-        }
-        return user;
+        return this.DB.models.mvlUser.create(data, {include: ['Profile']});
+    }
+
+    async userInGroup (user, group) {
+        let result = false;
+        let finder = {
+            include: [
+                {
+                    model: 'mvlUser',
+                }
+            ]
+        };
+        finder.where = this.MT.isString(group) ? {name: group} : {id: group};
+        finder.include[0].where = this.MT.isString(user) ? {username: user} : {id: user};
+        return (await this.DB.models.mvlUserGroup.count(finder)) > 0;
     }
 
     isRegistered_trg = async (ctx) => {
