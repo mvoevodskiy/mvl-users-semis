@@ -56,6 +56,13 @@ module.exports = (Sequelize) => {
                 {
                     model: 'mvlBotCMSUser',
                 },
+                {
+                    model: 'mvlOffer',
+                    foreignKey: 'UserId',
+                },
+                {
+                    model: 'mvlOfferResponse',
+                }
             ],
             'hasOne': [
                 {
