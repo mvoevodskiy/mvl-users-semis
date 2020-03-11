@@ -15,7 +15,7 @@ class MvlUsersSemis extends MVLoaderBase{
                 handlers: {
                     BotHandler: {
                         botcms: {
-                            middlewareMethods: [
+                            middlewares: [
                                 require('./botcmsmiddleware'),
                             ],
                         },
