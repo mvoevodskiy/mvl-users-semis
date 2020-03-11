@@ -1,5 +1,5 @@
 
-class BotCMSMiddleware {
+class mvlUsersBotCMSMiddleware {
 
     DB = null;
 
@@ -54,4 +54,4 @@ class BotCMSMiddleware {
     };
 }
 
-module.exports = BotCMSMiddleware;
+module.exports = mvlUsersBotCMSMiddleware;
