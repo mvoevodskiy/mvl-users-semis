@@ -1,6 +1,6 @@
 {
   "name": "mvl-users-semis",
-  "version": "1.0.5",
+  "version": "1.0.6-alpha.2",
   "description": "",
   "main": "src/mvluserssemis.js",
   "scripts": {
