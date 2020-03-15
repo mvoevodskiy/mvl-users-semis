@@ -32,7 +32,7 @@ class mvlUsersBotCMSMiddleware {
                 include: ['Profile']
             };
 
-            if (!target.MT.empty(mvlBotCMSUser)) {
+            if (!target.MT.empty(mvlBotCMSUser) && !target.MT.empty(mvlBotCMSUser.mvlUserId)) {
                 user = await mvlBotCMSUser.getMvlUser(finder);
             } else {
                 finder.where.botUserId = ctx.Message.sender.id;
@@ -45,7 +45,7 @@ class mvlUsersBotCMSMiddleware {
                         username: '(anonymous)',
                         Profile: {firstName: '(anonymous)'}
                     },
-                    finder
+                     finder
                 );
             }
             ctx.singleSession.mvlUser = user;
