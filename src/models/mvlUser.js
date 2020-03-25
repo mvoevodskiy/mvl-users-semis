@@ -58,10 +58,13 @@ module.exports = (Sequelize) => {
                 },
                 {
                     model: 'mvlOffer',
-                    foreignKey: 'UserId',
+                    as: 'Offers',
+                    foreignKey: 'AuthorId',
                 },
                 {
                     model: 'mvlOfferResponse',
+                    as: 'OfferResponses',
+                    foreignKey: 'UserId',
                 }
             ],
             'hasOne': [
