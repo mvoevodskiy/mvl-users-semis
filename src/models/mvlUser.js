@@ -31,6 +31,10 @@ module.exports = (Sequelize) => {
             remoteData: {
                 type: Sequelize.TEXT,
             },
+            active: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: true,
+            },
         },
         {
             hooks: {
