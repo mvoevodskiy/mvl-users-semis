@@ -31,18 +31,36 @@ class MVLUsersController extends MVLoaderBase {
         return this.DB.models.mvlUser.create(data, {include: ['Profile']});
     }
 
-    async userInGroup (user, group) {
-        let result = false;
+    userInGroups = async (user, groups) => {
         let finder = {
             include: [
                 {
-                    model: 'mvlUser',
+                    model: this.DB.models.mvlUserGroup,
+                    as: 'Groups',
+                    where: {
+                        name: {
+                            [this.DB.S.Op.in]: this.MT.makeArray(groups)
+                        }
+                    }
                 }
-            ]
+            ],
+            logging: console.log
         };
-        finder.where = this.MT.isString(group) ? {name: group} : {id: group};
-        finder.include[0].where = this.MT.isString(user) ? {username: user} : {id: user};
-        return (await this.DB.models.mvlUserGroup.count(finder)) > 0;
+        finder.where = this.MT.isString(user) ? {username: user} : {id: user};
+        return (await this.DB.models.mvlUser.count(finder)) > 0;
+    }
+
+    inGroupAdministrators_trg = async (ctx, user) => {
+        if (ctx instanceof this.DB.models.mvlUser) {
+            user = ctx;
+        } else if (ctx !== undefined && this.MT.empty(user)) {
+            user = ctx.singleSession.mvlUser;
+        }
+        // console.log(ctx, user);
+        if (user) {
+            return this.userInGroups(user.id, 'Administrators');
+        }
+        return false;
     }
 
     isRegistered_trg = async (ctx) => {
