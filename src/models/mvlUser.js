@@ -5,7 +5,6 @@ module.exports = (Sequelize) => {
                 type: Sequelize.STRING,
                 defaultValue: '',
                 allowNull: false,
-                unique: true,
                 set(val) {
                     if (val === '' || typeof val !== 'string') {
                         val = this.getDataValue('username') !== '' ? this.getDataValue('username') : 'user_' + Date.now();
