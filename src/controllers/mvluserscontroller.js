@@ -44,7 +44,7 @@ class MVLUsersController extends MVLoaderBase {
                     }
                 }
             ],
-            logging: console.log
+            // logging: console.log
         };
         finder.where = this.MT.isString(user) ? {username: user} : {id: user};
         return (await this.DB.models.mvlUser.count(finder)) > 0;
