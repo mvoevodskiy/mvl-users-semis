@@ -53,7 +53,7 @@ class MVLUsersController extends MVLoaderBase {
     inGroupAdministrators_trg = async (ctx, user) => {
         if (ctx instanceof this.DB.models.mvlUser) {
             user = ctx;
-        } else if (ctx !== undefined && this.MT.empty(user)) {
+        } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
             user = ctx.singleSession.mvlUser;
         }
         // console.log(ctx, user);
