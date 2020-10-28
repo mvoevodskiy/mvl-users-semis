@@ -34,7 +34,7 @@ class mvlUsersBotCMSMiddleware {
 
             if (!target.MT.empty(mvlBotCMSUser) && !target.MT.empty(mvlBotCMSUser.mvlUserId)) {
                 user = await mvlBotCMSUser.getMvlUser(finder);
-            } else {
+            } else if (ctx.Message.sender.id) {
                 finder.where.botUserId = ctx.Message.sender.id;
                 user = await this.Model.findOne(finder);
             }
