@@ -36,6 +36,20 @@ module.exports = (Sequelize) => {
             },
         },
         {
+            indexes: [
+                {
+                    fields: ['username']
+                },
+                {
+                    fields: ['active']
+                },
+                {
+                    fields: ['botUserId']
+                },
+                {
+                    fields: ['remoteKey']
+                }
+            ],
             hooks: {
                 beforeCreate: (user, options) => {
                     if (user.username === '') {
