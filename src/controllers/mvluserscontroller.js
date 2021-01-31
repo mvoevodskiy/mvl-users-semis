@@ -2,8 +2,6 @@ const {MVLoaderBase} = require('mvloader');
 
 class MVLUsersController extends MVLoaderBase {
 
-    caption = 'mvlUsers';
-
     constructor (App, ...config) {
         let localDefaults = {
             threads: {
@@ -13,6 +11,7 @@ class MVLUsersController extends MVLoaderBase {
         super(localDefaults, ...config);
         this.App = App;
         this.App.services.Users = this;
+        this.caption = 'mvlUsers'
 
         this.register_vld = async (ctx, vld, params = {}) => {
             const data = ctx.getAnswers(params.thread || this.config.threads.register)
@@ -23,6 +22,62 @@ class MVLUsersController extends MVLoaderBase {
             }
             return user
         }
+
+        this.userInGroups = async (user, groups) => {
+            let finder = {
+                include: [
+                    {
+                        model: this.DB.models.mvlUserGroup,
+                        as: 'Groups',
+                        where: {
+                            name: {
+                                [this.DB.S.Op.in]: this.MT.makeArray(groups)
+                            }
+                        }
+                    }
+                ],
+                logging: console.log
+            };
+            finder.where = this.MT.isString(user) ? {username: user} : {id: user};
+            return (await this.DB.models.mvlUser.count(finder)) > 0;
+        }
+
+        this.inGroupAdministrators_trg = async (ctx, user) => {
+            if (ctx instanceof this.DB.models.mvlUser) {
+                user = ctx;
+            } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
+                user = ctx.singleSession.mvlUser;
+            }
+            // console.log(ctx, user);
+            if (user) {
+                return this.userInGroups(user.id, 'Administrators');
+            }
+            return false;
+        }
+
+        this.inGroups_trg = async (ctx, params) => this.inGroups_vld(ctx, {}, params)
+
+        this.inGroups_vld = async (ctx, validator, params) => {
+            let user = params.user
+            if (ctx instanceof this.DB.models.mvlUser) {
+                user = ctx;
+            } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
+                user = ctx.singleSession.mvlUser;
+            }
+            // console.log(ctx, user);
+            if (user) {
+                return this.userInGroups(user.id, params.groups || []);
+            }
+            return false;
+        }
+
+        this.isRegistered_trg = async (ctx) => {
+            return ctx.singleSession.mvlUser.id !== -1;
+        };
+
+        this.notRegistered_trg = async (ctx) => {
+            return !(await this.isRegistered_trg(ctx));
+        };
     }
 
     async init() {
@@ -42,62 +97,6 @@ class MVLUsersController extends MVLoaderBase {
         }
         return this.DB.models.mvlUser.create(data, {include: ['Profile']});
     }
-
-    userInGroups = async (user, groups) => {
-        let finder = {
-            include: [
-                {
-                    model: this.DB.models.mvlUserGroup,
-                    as: 'Groups',
-                    where: {
-                        name: {
-                            [this.DB.S.Op.in]: this.MT.makeArray(groups)
-                        }
-                    }
-                }
-            ],
-            logging: console.log
-        };
-        finder.where = this.MT.isString(user) ? {username: user} : {id: user};
-        return (await this.DB.models.mvlUser.count(finder)) > 0;
-    }
-
-    inGroupAdministrators_trg = async (ctx, user) => {
-        if (ctx instanceof this.DB.models.mvlUser) {
-            user = ctx;
-        } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
-            user = ctx.singleSession.mvlUser;
-        }
-        // console.log(ctx, user);
-        if (user) {
-            return this.userInGroups(user.id, 'Administrators');
-        }
-        return false;
-    }
-
-    inGroups_trg = async (ctx, params) => this.inGroups_vld(ctx, {}, params)
-
-    inGroups_vld = async (ctx, validator, params) => {
-        let user = params.user
-        if (ctx instanceof this.DB.models.mvlUser) {
-            user = ctx;
-        } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
-            user = ctx.singleSession.mvlUser;
-        }
-        // console.log(ctx, user);
-        if (user) {
-            return this.userInGroups(user.id, params.groups || []);
-        }
-        return false;
-    }
-
-    isRegistered_trg = async (ctx) => {
-        return ctx.singleSession.mvlUser.id !== -1;
-    };
-
-    notRegistered_trg = async (ctx) => {
-        return !(await this.isRegistered_trg(ctx));
-    };
 
 }
 
