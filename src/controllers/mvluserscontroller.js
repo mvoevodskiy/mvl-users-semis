@@ -6,11 +6,23 @@ class MVLUsersController extends MVLoaderBase {
 
     constructor (App, ...config) {
         let localDefaults = {
-
+            threads: {
+                register: 'register'
+            }
         };
         super(localDefaults, ...config);
         this.App = App;
         this.App.services.Users = this;
+
+        this.register_vld = async (ctx, vld, params = {}) => {
+            const data = ctx.getAnswers(params.thread || this.config.threads.register)
+            const user = await this.register(data)
+            if (user !== null) {
+                if (params.saveState) ctx.state.mvlUser = user
+                if (params.saveToBotUser) await ctx.state.mvlBotCMSUser.setMvlUser(user)
+            }
+            return user
+        }
     }
 
     async init() {
@@ -44,7 +56,7 @@ class MVLUsersController extends MVLoaderBase {
                     }
                 }
             ],
-            // logging: console.log
+            logging: console.log
         };
         finder.where = this.MT.isString(user) ? {username: user} : {id: user};
         return (await this.DB.models.mvlUser.count(finder)) > 0;
@@ -59,6 +71,22 @@ class MVLUsersController extends MVLoaderBase {
         // console.log(ctx, user);
         if (user) {
             return this.userInGroups(user.id, 'Administrators');
+        }
+        return false;
+    }
+
+    inGroups_trg = async (ctx, params) => this.inGroups_vld(ctx, {}, params)
+
+    inGroups_vld = async (ctx, validator, params) => {
+        let user = params.user
+        if (ctx instanceof this.DB.models.mvlUser) {
+            user = ctx;
+        } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
+            user = ctx.singleSession.mvlUser;
+        }
+        // console.log(ctx, user);
+        if (user) {
+            return this.userInGroups(user.id, params.groups || []);
         }
         return false;
     }
