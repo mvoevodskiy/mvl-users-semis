@@ -12,6 +12,12 @@ class MVLUsersController extends MVLoaderBase {
     this.App.services.Users = this
     this.caption = 'mvlUsers'
 
+    this.registerUnregistered_vld = async (ctx, vld, params = {}) => {
+      return await this.MT.extract('mvlUser.id', ctx.state, -1) === -1
+        ? this.register_vld(ctx, vld, params)
+        : true
+    }
+
     this.register_vld = async (ctx, vld, params = {}) => {
       const data = ctx.getAnswers(params.thread || this.config.threads.register)
       const user = await this.register(data)
