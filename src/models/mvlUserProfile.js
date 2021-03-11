@@ -51,6 +51,7 @@ module.exports = (Sequelize) => {
                 type: Sequelize.STRING,
                 defaultValue: '',
             },
+            language: Sequelize.STRING(3)
         },
         {
             getterMethods: {
