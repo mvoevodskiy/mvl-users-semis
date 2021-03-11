@@ -48,6 +48,9 @@ class mvlUsersBotCMSMiddleware {
                      finder
                 );
             }
+            if (!target.MT.empty(user.Profile.language)) {
+                ctx.language = user.Profile.language
+            }
             ctx.singleSession.mvlUser = user;
             return next(ctx);
         }
