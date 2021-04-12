@@ -1,33 +1,33 @@
 module.exports = (Sequelize) => {
-    return [
+  return [
+    {
+      name: {
+        type: Sequelize.STRING,
+        defaultValue: ''
+      },
+      description: {
+        type: Sequelize.STRING,
+        defaultValue: ''
+      }
+    },
+    {},
+    {
+      belongsToMany: [
         {
-            name: {
-                type: Sequelize.STRING,
-                defaultValue: '',
-            },
-            description: {
-                type: Sequelize.STRING,
-                defaultValue: '',
-            },
+          model: 'mvlUserPermissionSet',
+          as: 'PermissionSets',
+          through: {
+            model: 'mvlUserPermissionSetPolicyMember'
+          }
         },
-        {},
         {
-            'belongsToMany': [
-                {
-                    model: 'mvlUserPermissionSet',
-                    as: 'PermissionSets',
-                    through: {
-                        model: 'mvlUserPermissionSetPolicyMember'
-                    }
-                },
-                {
-                    model: 'mvlUserGroup',
-                    as: 'Groups',
-                    through: {
-                        model: 'mvlUserPolicyGroupMember'
-                    }
-                },
-            ]
+          model: 'mvlUserGroup',
+          as: 'Groups',
+          through: {
+            model: 'mvlUserPolicyGroupMember'
+          }
         }
-    ];
-};
+      ]
+    }
+  ]
+}
