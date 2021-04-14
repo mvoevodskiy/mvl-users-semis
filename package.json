@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "mvl-db-handler": "^1.0.8",
-    "mvloader": "^1.0.7",
-    "mvtools": "^1.0.18"
+    "mvloader": "^1.0.9",
+    "mvtools": "^1.0.19"
   },
   "devDependencies": {},
   "author": "mvoevodskiy",
