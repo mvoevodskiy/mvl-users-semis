@@ -1,3 +1,4 @@
+const mt = require('mvtools')
 
 class mvlUsersBotCMSMiddleware {
   constructor (BotCMS) {
@@ -29,9 +30,28 @@ class mvlUsersBotCMSMiddleware {
           include: ['Profile']
         }
 
-        if (!target.MT.empty(mvlBotCMSUser) && !target.MT.empty(mvlBotCMSUser.mvlUserId)) {
-          user = await mvlBotCMSUser.getMvlUser(finder)
-        } else if (ctx.Message.sender.id) {
+        if (!target.MT.empty(mvlBotCMSUser)) {
+          if (mt.empty(mvlBotCMSUser.mvlUserId) && !mt.empty(ctx.Message.sender.id)) {
+            const botUser = await this.DB.models.mvlBotCMSUser.findOne({
+              where: {
+                userId: String(ctx.Message.sender.id),
+                bridge: ctx.Bridge.driverName,
+                mvlUserId: {
+                  [this.DB.S.Op.not]: null
+                }
+              }
+            })
+            if (botUser !== null) {
+              mvlBotCMSUser.mvlUserId = botUser.mvlUserId
+              await mvlBotCMSUser.save()
+            }
+          }
+          if (!target.MT.empty(mvlBotCMSUser.mvlUserId)) {
+            user = await mvlBotCMSUser.getMvlUser(finder)
+          }
+        }
+
+        if (mt.empty(user) && !mt.empty(ctx.Message.sender.id)) {
           finder.where.botUserId = String(ctx.Message.sender.id)
           user = await this.Model.findOne(finder)
         }
