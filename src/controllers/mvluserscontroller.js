@@ -1,4 +1,5 @@
 const { MVLoaderBase } = require('mvloader')
+const mt = require('mvtools')
 
 class MVLUsersController extends MVLoaderBase {
   constructor (App, ...config) {
@@ -13,7 +14,7 @@ class MVLUsersController extends MVLoaderBase {
     this.caption = 'mvlUsers'
 
     this.registerUnregisteredVld = async (ctx, vld, params = {}) => {
-      return await this.MT.extract('mvlUser.id', ctx.state, -1) === -1
+      return await mt.extract('mvlUser.id', ctx.state, -1) === -1
         ? this.registerVld(ctx, vld, params)
         : true
     }
@@ -36,21 +37,21 @@ class MVLUsersController extends MVLoaderBase {
             as: 'Groups',
             where: {
               name: {
-                [this.DB.S.Op.in]: this.MT.makeArray(groups)
+                [this.DB.S.Op.in]: mt.makeArray(groups)
               }
             }
           }
         ],
         logging: console.log
       }
-      finder.where = this.MT.isString(user) ? { username: user } : { id: user }
+      finder.where = typeof user === 'string' ? { username: user } : { id: user }
       return (await this.DB.models.mvlUser.count(finder)) > 0
     }
 
     this.inGroupAdministratorsTrg = async (ctx, user) => {
       if (ctx instanceof this.DB.models.mvlUser) {
         user = ctx
-      } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
+      } else if (ctx !== undefined && (mt.empty(user) || mt.empty(user.id))) {
         user = ctx.state.mvlUser
       }
       // console.log(ctx, user);
@@ -64,7 +65,7 @@ class MVLUsersController extends MVLoaderBase {
       let user = params.user
       if (ctx instanceof this.DB.models.mvlUser) {
         user = ctx
-      } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
+      } else if (ctx !== undefined && (mt.empty(user) || mt.empty(user.id))) {
         user = ctx.state.mvlUser
       }
       // console.log(ctx, user);

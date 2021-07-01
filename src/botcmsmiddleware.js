@@ -30,7 +30,7 @@ class mvlUsersBotCMSMiddleware {
           include: ['Profile']
         }
 
-        if (!target.MT.empty(mvlBotCMSUser)) {
+        if (!mt.empty(mvlBotCMSUser)) {
           if (mt.empty(mvlBotCMSUser.mvlUserId) && !mt.empty(ctx.Message.sender.id)) {
             const botUser = await this.DB.models.mvlBotCMSUser.findOne({
               where: {
@@ -46,7 +46,7 @@ class mvlUsersBotCMSMiddleware {
               await mvlBotCMSUser.save()
             }
           }
-          if (!target.MT.empty(mvlBotCMSUser.mvlUserId)) {
+          if (!mt.empty(mvlBotCMSUser.mvlUserId)) {
             user = await mvlBotCMSUser.getMvlUser(finder)
           }
         }
@@ -56,7 +56,7 @@ class mvlUsersBotCMSMiddleware {
           user = await this.Model.findOne(finder)
         }
 
-        if (target.MT.empty(user)) {
+        if (mt.empty(user)) {
           user = this.Model.build({
             id: -1,
             username: '(anonymous)',
@@ -65,7 +65,7 @@ class mvlUsersBotCMSMiddleware {
           finder
           )
         }
-        if (!target.MT.empty(user.Profile.language)) {
+        if (!mt.empty(user.Profile.language)) {
           ctx.language = user.Profile.language
         }
         ctx.singleSession.mvlUser = user
