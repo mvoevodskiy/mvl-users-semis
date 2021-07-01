@@ -12,13 +12,13 @@ class MVLUsersController extends MVLoaderBase {
     this.App.services.Users = this
     this.caption = 'mvlUsers'
 
-    this.registerUnregistered_vld = async (ctx, vld, params = {}) => {
+    this.registerUnregisteredVld = async (ctx, vld, params = {}) => {
       return await this.MT.extract('mvlUser.id', ctx.state, -1) === -1
-        ? this.register_vld(ctx, vld, params)
+        ? this.registerVld(ctx, vld, params)
         : true
     }
 
-    this.register_vld = async (ctx, vld, params = {}) => {
+    this.registerVld = async (ctx, vld, params = {}) => {
       const data = ctx.getAnswers(params.thread || this.config.threads.register)
       const user = await this.register(data)
       if (user !== null) {
@@ -47,11 +47,11 @@ class MVLUsersController extends MVLoaderBase {
       return (await this.DB.models.mvlUser.count(finder)) > 0
     }
 
-    this.inGroupAdministrators_trg = async (ctx, user) => {
+    this.inGroupAdministratorsTrg = async (ctx, user) => {
       if (ctx instanceof this.DB.models.mvlUser) {
         user = ctx
       } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
-        user = ctx.singleSession.mvlUser
+        user = ctx.state.mvlUser
       }
       // console.log(ctx, user);
       if (user) {
@@ -60,14 +60,12 @@ class MVLUsersController extends MVLoaderBase {
       return false
     }
 
-    this.inGroups_trg = async (ctx, params) => this.inGroups_vld(ctx, {}, params)
-
-    this.inGroups_vld = async (ctx, validator, params) => {
+    this.inGroupsVld = async (ctx, validator, params) => {
       let user = params.user
       if (ctx instanceof this.DB.models.mvlUser) {
         user = ctx
       } else if (ctx !== undefined && (this.MT.empty(user) || this.MT.empty(user.id))) {
-        user = ctx.singleSession.mvlUser
+        user = ctx.state.mvlUser
       }
       // console.log(ctx, user);
       if (user) {
@@ -76,13 +74,24 @@ class MVLUsersController extends MVLoaderBase {
       return false
     }
 
-    this.isRegistered_trg = async (ctx) => {
-      return ctx.singleSession.mvlUser.id !== -1
-    }
+    this.isRegisteredTrg = async (ctx) => this.isRegisteredTrg(ctx)
+    this.inGroupsTrg = async (ctx, params) => this.inGroupsVld(ctx, {}, params)
+    this.notRegisteredTrg = async (ctx) => !(await this.isRegisteredTrg(ctx))
+    this.notInGroupsTrg = async (ctx, params) => !(await this.inGroupsTrg(ctx, {}, params))
+    this.notInGroupsVld = async (ctx, validator, params) => !(await this.inGroupsVld(ctx, validator, params))
+    this.inGroupAdministratorsTrg = async (ctx, user) => this.inGroupAdministratorsTrg(ctx, user)
+    this.notInGroupAdministratorsTrg = async (ctx, validator, params) => !(await this.inGroupAdministratorsTrg(ctx, params))
 
-    this.notRegistered_trg = async (ctx) => {
-      return !(await this.isRegistered_trg(ctx))
-    }
+    this.registerUnregistered_vld = async (ctx, vld, params = {}) => this.registerUnregisteredVld(ctx, vld, params)
+    this.register_vld = async (ctx, vld, params = {}) => this.registerVld(ctx, vld, params)
+    this.isRegistered_trg = async (ctx) => this.isRegisteredTrg(ctx)
+    this.inGroups_vld = async (ctx, validator, params) => this.inGroupsVld(ctx, validator, params)
+    this.inGroups_trg = async (ctx, params) => this.inGroupsTrg(ctx, params)
+    this.notRegistered_trg = async (ctx) => this.notRegisteredTrg(ctx)
+    this.notInGroups_trg = async (ctx, params) => this.notInGroupsTrg(ctx, params)
+    this.notInGroups_vld = async (ctx, validator, params) => this.notInGroupsVld(ctx, validator, params)
+    this.inGroupAdministrators_trg = async (ctx, user) => this.inGroupAdministratorsTrg(ctx, user)
+    this.notInGroupAdministrators_trg = async (ctx, validator, params) => this.notInGroupAdministratorsTrg(ctx, validator, params)
   }
 
   async init () {
