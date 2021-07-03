@@ -75,12 +75,12 @@ class MVLUsersController extends MVLoaderBase {
       return false
     }
 
-    this.isRegisteredTrg = async (ctx) => this.isRegisteredTrg(ctx)
+    this.isRegisteredTrg = async (ctx) => mt.extract('mvlUser.id', ctx.state, -1) !== -1
     this.inGroupsTrg = async (ctx, params) => this.inGroupsVld(ctx, {}, params)
     this.notRegisteredTrg = async (ctx) => !(await this.isRegisteredTrg(ctx))
-    this.notInGroupsTrg = async (ctx, params) => !(await this.inGroupsTrg(ctx, {}, params))
+    this.notInGroupsTrg = async (ctx, params) => !(await this.inGroupsTrg(ctx, params))
     this.notInGroupsVld = async (ctx, validator, params) => !(await this.inGroupsVld(ctx, validator, params))
-    this.inGroupAdministratorsTrg = async (ctx, user) => this.inGroupAdministratorsTrg(ctx, user)
+    // this.inGroupAdministratorsTrg = async (ctx, user) => this.inGroupAdministratorsTrg(ctx, user)
     this.notInGroupAdministratorsTrg = async (ctx, validator, params) => !(await this.inGroupAdministratorsTrg(ctx, params))
 
     this.registerUnregistered_vld = async (ctx, vld, params = {}) => this.registerUnregisteredVld(ctx, vld, params)
