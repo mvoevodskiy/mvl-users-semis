@@ -24,7 +24,7 @@ class mvlUsersBotCMSMiddleware {
     this.handleUpdate = (target) => {
       return next => async ctx => {
         let user
-        const mvlBotCMSUser = ctx.singleSession.mvlBotCMSUser
+        const mvlBotCMSUser = ctx.state.mvlBotCMSUser
         const finder = {
           where: {},
           include: ['Profile']
@@ -67,8 +67,8 @@ class mvlUsersBotCMSMiddleware {
         if (!mt.empty(user.Profile.language)) {
           ctx.language = user.Profile.language
         }
-        ctx.singleSession.mvlUser = user
-        // console.log('MVL USERS MW. USER', ctx.singleSession.mvlUser.get())
+        ctx.state.mvlUser = user
+        // console.log('MVL USERS MW. USER', ctx.state.mvlUser.get())
         return next(ctx)
       }
     }
