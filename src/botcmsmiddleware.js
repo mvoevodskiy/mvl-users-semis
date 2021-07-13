@@ -35,15 +35,14 @@ class mvlUsersBotCMSMiddleware {
             const botUser = await this.DB.models.mvlBotCMSUser.findOne({
               where: {
                 userId: String(ctx.Message.sender.id),
-                bridge: ctx.Bridge.driverName,
+                driver: ctx.Bridge.driverName,
                 mvlUserId: {
                   [this.DB.S.Op.not]: null
                 }
               }
             })
             if (botUser !== null) {
-              mvlBotCMSUser.mvlUserId = botUser.mvlUserId
-              await mvlBotCMSUser.save()
+              await mvlBotCMSUser.update({ mvlUserId: botUser.mvlUserId })
             }
           }
           if (!mt.empty(mvlBotCMSUser.mvlUserId)) {
