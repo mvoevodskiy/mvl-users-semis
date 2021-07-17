@@ -111,6 +111,18 @@ class MVLUsersController extends MVLoaderBase {
     }
     return this.DB.models.mvlUser.create(data, { include: ['Profile'] })
   }
+
+  async getUsersByGroups (groupNames) {
+    return this.App.DB.models.mvlUser.findAll({
+      include: [
+        {
+          model: this.App.DB.models.mvlUserGroup,
+          as: 'Groups',
+          where: { name: groupNames }
+        }
+      ]
+    })
+  }
 }
 
 module.exports = MVLUsersController
